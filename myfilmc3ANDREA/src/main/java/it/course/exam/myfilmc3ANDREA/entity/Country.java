@@ -18,7 +18,7 @@ public class Country {
 	@Column(name = "COUNTRY_ID", length = 2)
 	private String countryId;
 	
-	@Column(length = 40)
+	@Column(length = 40, nullable = false)
 	private String countryName;
 
 }

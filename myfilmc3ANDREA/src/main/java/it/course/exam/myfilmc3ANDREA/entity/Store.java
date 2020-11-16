@@ -24,13 +24,13 @@ public class Store {
 	@Column(name = "STORE_ID", length = 10)
 	private String storeId;
 	
-	@Column(length = 50)
+	@Column(length = 50, nullable = false)
 	private String storeName;
 	
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "INVENTORY", 
 		joinColumns = { @JoinColumn(name = "STORE_ID", referencedColumnName = "STORE_ID") }, 
 		inverseJoinColumns = { @JoinColumn(name = "FILM_ID", referencedColumnName = "FILM_ID") })
-	private Set<Film> filmId;
+	private Set<Film> inventory;
 	
 }

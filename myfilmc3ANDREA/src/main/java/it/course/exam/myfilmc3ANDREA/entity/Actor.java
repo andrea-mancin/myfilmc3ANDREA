@@ -23,14 +23,14 @@ public class Actor {
 	@Column(name = "ACTOR_ID", length = 10)
 	private String actorId;
 
-	@Column(length = 45)
+	@Column(length = 45, nullable = false)
 	private String firstName;
 
-	@Column(length = 45)
+	@Column(length = 45, nullable = false)
 	private String lastName;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "countryId")
-	private Country countryId;
+	@JoinColumn(name = "COUNTRY_ID", nullable = false)
+	private Country country;
 
 }

@@ -27,14 +27,14 @@ public class RentalId implements Serializable {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "CUSTOMER_EMAIL", nullable = false)
-	private Customer customerEmail;
+	private Customer customer;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "FILM_ID", nullable = false)
-	private Film filmId;
+	private Film film;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "STORE_ID", nullable = false)
-	private Store storeId;
+	private Store store;
 	
 }

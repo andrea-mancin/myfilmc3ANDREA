@@ -5,11 +5,11 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import it.course.exam.myfilmc3ANDREA.entity.Film;
+import it.course.exam.myfilmc3ANDREA.entity.Language;
 
 @Repository
-public interface FilmRepository extends JpaRepository<Film, String> {
+public interface LanguageRepository extends JpaRepository<Language, String >{
 
-	Optional<Film> findByFilmId(String filmId);
-
+	Optional<Language> findByLanguageId(String languageId);
+	
 }

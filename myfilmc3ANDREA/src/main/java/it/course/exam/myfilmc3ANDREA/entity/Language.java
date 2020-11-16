@@ -18,7 +18,7 @@ public class Language {
 	@Column(name = "LANGUAGE_ID", length = 2)
 	private String languageId;
 	
-	@Column(length = 40)
+	@Column(length = 40, nullable = false)
 	private String languageName;
 
 }
