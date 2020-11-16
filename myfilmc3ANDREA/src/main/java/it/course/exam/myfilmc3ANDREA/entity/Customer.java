@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 public class Customer {
 	
 	@Id
-	@Column(length = 50)
+	@Column(name = "EMAIL", length = 50)
 	private String email;
 	
 	@Column(length = 45, nullable = false)

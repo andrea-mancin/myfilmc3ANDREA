@@ -23,10 +23,10 @@ public class Actor {
 	@Column(name = "ACTOR_ID", length = 10)
 	private String actorId;
 
-	@Column(columnDefinition = "VARCHAR(45)")
+	@Column(length = 45)
 	private String firstName;
 
-	@Column(columnDefinition = "VARCHAR(45)")
+	@Column(length = 45)
 	private String lastName;
 
 	@ManyToOne(fetch = FetchType.LAZY)

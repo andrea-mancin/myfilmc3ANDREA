@@ -15,10 +15,10 @@ import lombok.NoArgsConstructor;
 public class Country {
 	
 	@Id
-	@Column(columnDefinition = "VARCHAR(2)")
+	@Column(name = "COUNTRY_ID", length = 2)
 	private String countryId;
 	
-	@Column(columnDefinition = "VARCHAR(40)")
+	@Column(length = 40)
 	private String countryName;
 
 }

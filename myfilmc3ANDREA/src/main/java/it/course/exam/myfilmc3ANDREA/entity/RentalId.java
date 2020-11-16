@@ -26,7 +26,7 @@ public class RentalId implements Serializable {
 	private Date rentalDate;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "EMAIL", nullable = false)
+	@JoinColumn(name = "CUSTOMER_EMAIL", nullable = false)
 	private Customer customerEmail;
 	
 	@ManyToOne(fetch = FetchType.LAZY)

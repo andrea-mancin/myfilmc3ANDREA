@@ -11,7 +11,6 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.validation.constraints.Size;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -31,10 +30,10 @@ public class Film {
 	@Column(columnDefinition = "TEXT")
 	private String description;
 
-	@Size(min = 4, max = 4)
+	@Column(length = 4)
 	private Integer releaseYear;
 
-	@Size(max = 128)
+	@Column(length = 128)
 	private String title;
 
 	@ManyToOne(fetch = FetchType.LAZY)
