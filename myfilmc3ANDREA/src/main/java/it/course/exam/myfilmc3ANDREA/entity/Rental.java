@@ -20,6 +20,7 @@ public class Rental {
 	@Column(name = "RENTAL_ID")
 	private RentalId rentalId;
 	
+	@Column(nullable = false)
 	private Date rentalReturn;
 	
 }

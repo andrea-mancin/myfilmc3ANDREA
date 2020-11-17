@@ -19,7 +19,7 @@ import lombok.NoArgsConstructor;
 public class FilmRequest {
 	
 	@NotBlank
-	@Size(min = 10, max = 10)
+	@Size(max = 10)
 	private String filmId;
 	
 	@NotBlank
