@@ -24,10 +24,11 @@ import it.course.exam.myfilmc3ANDREA.entity.Language;
 import it.course.exam.myfilmc3ANDREA.payload.request.FilmRequest;
 import it.course.exam.myfilmc3ANDREA.payload.response.CustomResponse;
 import it.course.exam.myfilmc3ANDREA.payload.response.FilmResponse;
-import it.course.exam.myfilmc3ANDREA.payload.response.TinyResponse;
+import it.course.exam.myfilmc3ANDREA.payload.response.SimpleFilmResponse;
 import it.course.exam.myfilmc3ANDREA.repository.ActorRepository;
 import it.course.exam.myfilmc3ANDREA.repository.CountryRepository;
 import it.course.exam.myfilmc3ANDREA.repository.FilmRepository;
+import it.course.exam.myfilmc3ANDREA.repository.InventoryRepository;
 import it.course.exam.myfilmc3ANDREA.repository.LanguageRepository;
 import it.course.exam.myfilmc3ANDREA.repository.StoreRepository;
 import it.course.exam.myfilmc3ANDREA.service.FilmService;
@@ -46,10 +47,13 @@ public class FilmController {
 
 	@Autowired
 	ActorRepository actorRepository;
-	
+
 	@Autowired
 	StoreRepository storeRepository;
-	
+
+	@Autowired
+	InventoryRepository inventoryRepository;
+
 	@Autowired
 	FilmService filmService;
 
@@ -181,40 +185,33 @@ public class FilmController {
 					new CustomResponse(404, "NOT_FOUND", "FilmController: no such film found with given ID", request),
 					HttpStatus.NOT_FOUND);
 
-		return new ResponseEntity<CustomResponse>(
-				new CustomResponse(200, "OK", searchedFilm, request),
+		return new ResponseEntity<CustomResponse>(new CustomResponse(200, "OK", searchedFilm, request), HttpStatus.OK);
+
+	}
+
+	@GetMapping("get-films-paged-by-title-asc")
+	private ResponseEntity<?> getFilmsPagedByTitleAsc(@RequestParam(defaultValue = "0") int pagNo,
+			@RequestParam(defaultValue = "10") int pagSize, HttpServletRequest request) {
+
+		List<FilmResponse> filmResponsePaged = filmService.pagedFilmResponseOfAllFilms(pagNo, pagSize, "ASC", "title");
+
+		if (filmResponsePaged.isEmpty())
+			return new ResponseEntity<CustomResponse>(
+					new CustomResponse(404, "NOT_FOUND", "FilmController: no film(s) found.", request), HttpStatus.OK);
+
+		return new ResponseEntity<CustomResponse>(new CustomResponse(200, "OK", filmResponsePaged, request),
 				HttpStatus.OK);
 
 	}
-	
-	@GetMapping("get-films-paged-by-title-asc")
-	private ResponseEntity<?> getFilmsPagedByTitleAsc(
-			@RequestParam(defaultValue = "0") int pagNo,
-			@RequestParam(defaultValue = "10") int pagSize,
-			HttpServletRequest request) {
-		
-		List<FilmResponse> filmResponsePaged = filmService.pagedFilmResponseOfAllFilms(pagNo, pagSize, "ASC", "title");
-		
-		if (filmResponsePaged.isEmpty())
-			return new ResponseEntity<CustomResponse>(
-					new CustomResponse(404, "NOT_FOUND", "FilmController: no film(s) found.", request),
-					HttpStatus.OK);
-		
-		return new ResponseEntity<CustomResponse>(
-				new CustomResponse(200, "OK", filmResponsePaged, request),
-				HttpStatus.OK);
-		
-	}
-	
+
 	@GetMapping("find-film-in-store/{filmId}") // RESPONSE: film_id, store_name
 	private ResponseEntity<?> findFilmInStore(@PathVariable String filmId, HttpServletRequest request) {
-		
-		Optional<TinyResponse> searchedFilm = filmRepository.sqlFindFilmInStoreByFilmId(filmId);
-				
-		return new ResponseEntity<CustomResponse>(
-				new CustomResponse(200, "OK", searchedFilm, request),
-				HttpStatus.OK);
-		
+
+		Optional<SimpleFilmResponse> inventory = inventoryRepository.jpqlFindFilmInStoreByFilmId(filmId);
+		if (inventory.isPresent())
+			return new ResponseEntity<CustomResponse>(new CustomResponse(200, "OK", inventory, request), HttpStatus.OK);
+
+		return new ResponseEntity<CustomResponse>(new CustomResponse(404, "NOT_FOUND", "FilmController: film not found in any store", request), HttpStatus.OK);
 	}
 
 }

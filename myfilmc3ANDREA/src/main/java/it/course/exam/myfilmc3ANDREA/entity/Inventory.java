@@ -1,8 +1,5 @@
 package it.course.exam.myfilmc3ANDREA.entity;
 
-import java.util.Date;
-
-import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -12,15 +9,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "RENTAL")
+@Table(name = "INVENTORY")
 @Data @AllArgsConstructor @NoArgsConstructor
-public class Rental {
-
+public class Inventory {
+	
 	@EmbeddedId
-	@Column(name = "RENTAL_ID")
-	private RentalId rentalId;
-	
-	@Column(name = "RENTAL_RETURN", nullable = false)
-	private Date rentalReturn;
-	
+	private InventoryId inventoryId;
+
 }

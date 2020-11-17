@@ -50,16 +50,26 @@ public class Film {
 			@JoinColumn(name = "FILM_ID", referencedColumnName = "FILM_ID") }, inverseJoinColumns = {
 					@JoinColumn(name = "ACTOR_ID", referencedColumnName = "ACTOR_ID") })
 	private Set<Actor> actors;
-	
-	public static Film createEntityFromRequest(FilmRequest filmRequest, Country country, Language language, Set<Actor> actors) {
-		return new Film(
-				filmRequest.getFilmId(),
-				filmRequest.getDescription(),
-				filmRequest.getReleaseYear().getValue(),
-				filmRequest.getTitle(),
-				country,
-				language,
-				actors);
+
+//	@ManyToMany(mappedBy = "inventory")
+//	Set<Store> inventory;
+
+	public static Film createEntityFromRequest(FilmRequest filmRequest, Country country, Language language,
+			Set<Actor> actors) {
+		return new Film(filmRequest.getFilmId(), filmRequest.getDescription(), filmRequest.getReleaseYear().getValue(),
+				filmRequest.getTitle(), country, language, actors);
 	}
+
+//	public Film(String filmId, String description, int releaseYear, String title, Country countryId,
+//			Language languageId, Set<Actor> actors) {
+//		super();
+//		this.filmId = filmId;
+//		this.description = description;
+//		this.releaseYear = releaseYear;
+//		this.title = title;
+//		this.countryId = countryId;
+//		this.languageId = languageId;
+//		this.actors = actors;
+//	}
 
 }
