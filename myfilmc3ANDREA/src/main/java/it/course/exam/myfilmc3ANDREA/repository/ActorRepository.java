@@ -15,5 +15,13 @@ public interface ActorRepository extends JpaRepository<Actor, String> {
 			+ "LEFT JOIN FETCH a.country "
 			+ "WHERE a.actorId IN (:actorsId)")
 	Set<Actor> jpqlFindByActorIdIn(Set<String> actorsId);
+
+	@Query(value = "SELECT a FROM Actor a "
+			+ "LEFT JOIN FETCH a.country "
+			+ "WHERE a.lastName IN (:actorLastnames)")
+	Set<Actor> jpqlFindByLastNameIn(Set<String> actorLastnames);
+
+	@Query(value = "SELECT actorId FROM Actor a WHERE a.lastName IN (:actorLastnames)")
+	Set<String> jpqlFindActorsIdByLastName(Set<String> actorLastnames);
 	
 }
