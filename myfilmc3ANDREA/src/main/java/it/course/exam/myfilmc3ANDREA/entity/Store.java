@@ -23,11 +23,5 @@ public class Store {
 	@NaturalId
 	@Column(length = 50, nullable = false)
 	private String storeName;
-	
-//	@ManyToMany(fetch = FetchType.LAZY)
-//	@JoinTable(name = "INVENTORY",
-//		joinColumns = @JoinColumn(name = "STORE_ID", referencedColumnName= "STORE_ID"),
-//		inverseJoinColumns = @JoinColumn(name = "FILM_ID", referencedColumnName= "FILM_ID"))
-//	Set<Film> inventory;
-	
+		
 }

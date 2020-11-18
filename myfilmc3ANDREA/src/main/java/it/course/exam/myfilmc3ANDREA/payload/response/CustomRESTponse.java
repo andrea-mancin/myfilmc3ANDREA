@@ -9,7 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data @AllArgsConstructor @NoArgsConstructor
-public class CustomResponse {
+public class CustomRESTponse {
 	
 	private Instant timestamp;
 	private int status;
@@ -17,7 +17,7 @@ public class CustomResponse {
 	private Object message;
 	private String path;
 	
-	public CustomResponse(int status, String error, Object message, HttpServletRequest request) {
+	public CustomRESTponse(int status, String error, Object message, HttpServletRequest request) {
 		super();
 		timestamp = Instant.now();
 		this.status = status;

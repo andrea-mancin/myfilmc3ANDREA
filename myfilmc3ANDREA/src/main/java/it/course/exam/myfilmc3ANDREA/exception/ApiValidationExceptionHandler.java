@@ -19,7 +19,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import it.course.exam.myfilmc3ANDREA.payload.response.CustomResponse;
+import it.course.exam.myfilmc3ANDREA.payload.response.CustomRESTponse;
 
 @ControllerAdvice
 public class ApiValidationExceptionHandler extends ResponseEntityExceptionHandler {
@@ -47,7 +47,7 @@ public class ApiValidationExceptionHandler extends ResponseEntityExceptionHandle
 
 				
 		
-		return new ResponseEntity<Object>(new CustomResponse(
+		return new ResponseEntity<Object>(new CustomRESTponse(
 				Instant.now(),
 				422,
 				"Bad Request",
@@ -71,7 +71,7 @@ public class ApiValidationExceptionHandler extends ResponseEntityExceptionHandle
 				fieldError.getInvalidValue()))
 			.collect(Collectors.toList());
 		
-		return new ResponseEntity<Object>(new CustomResponse(
+		return new ResponseEntity<Object>(new CustomRESTponse(
 				Instant.now(),
 				422,
 				"BAD REQUEST",
@@ -91,7 +91,7 @@ public class ApiValidationExceptionHandler extends ResponseEntityExceptionHandle
 				e.getMessage(),
 				request.getParameter(e.getName()));
 		
-		return new ResponseEntity<Object>(new CustomResponse(
+		return new ResponseEntity<Object>(new CustomRESTponse(
 				Instant.now(),
 				422,
 				"BAD REQUEST",

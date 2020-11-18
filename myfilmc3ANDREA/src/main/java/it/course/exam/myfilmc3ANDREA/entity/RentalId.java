@@ -22,7 +22,7 @@ public class RentalId implements Serializable {
 	 */
 	private static final long serialVersionUID = -7056355014283331947L;
 
-	@Column(name = "RENTAL_DATE", nullable = false)
+	@Column(name = "RENTAL_DATE", nullable = false, columnDefinition="DATE")
 	private Date rentalDate;
 
 	@ManyToOne(fetch = FetchType.LAZY)

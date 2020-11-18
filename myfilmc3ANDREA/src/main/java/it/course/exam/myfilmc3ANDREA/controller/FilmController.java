@@ -25,7 +25,7 @@ import it.course.exam.myfilmc3ANDREA.entity.Country;
 import it.course.exam.myfilmc3ANDREA.entity.Film;
 import it.course.exam.myfilmc3ANDREA.entity.Language;
 import it.course.exam.myfilmc3ANDREA.payload.request.FilmRequest;
-import it.course.exam.myfilmc3ANDREA.payload.response.CustomResponse;
+import it.course.exam.myfilmc3ANDREA.payload.response.CustomRESTponse;
 import it.course.exam.myfilmc3ANDREA.payload.response.FilmResponse;
 import it.course.exam.myfilmc3ANDREA.payload.response.SimpleFilmResponse;
 import it.course.exam.myfilmc3ANDREA.repository.ActorRepository;
@@ -73,17 +73,23 @@ public class FilmController {
 			Optional<Country> searchedCountry = countryRepository.findByCountryId(filmRequest.getCountryId());
 
 			if (!searchedCountry.isPresent())
-				return new ResponseEntity<Object>("FilmController: no such country found.", HttpStatus.NOT_FOUND);
+				return new ResponseEntity<CustomRESTponse>(
+						new CustomRESTponse(404, "NOT FOUND", "FilmController: no such country found.", request),
+						HttpStatus.NOT_FOUND);
 
 			Optional<Language> searchedLanguage = languageRepository.findByLanguageId(filmRequest.getLanguageId());
 
 			if (!searchedLanguage.isPresent())
-				return new ResponseEntity<Object>("FilmController: no such language found.", HttpStatus.NOT_FOUND);
+				return new ResponseEntity<CustomRESTponse>(
+						new CustomRESTponse(404, "NOT FOUND", "FilmController: no such language found.", request),
+						HttpStatus.NOT_FOUND);
 
 			Set<Actor> searchedActors = actorRepository.jpqlFindByActorIdIn(filmRequest.getActorsId());
 
 			if (searchedActors.isEmpty())
-				return new ResponseEntity<Object>("FilmController: no such actor(s) found.", HttpStatus.NOT_FOUND);
+				return new ResponseEntity<CustomRESTponse>(
+						new CustomRESTponse(404, "NOT FOUND", "FilmController: no such actor(s) found.", request),
+						HttpStatus.NOT_FOUND);
 			/* FINE CONTROLLI */
 
 			Country country = searchedCountry.get();
@@ -94,7 +100,8 @@ public class FilmController {
 
 			filmRepository.save(filmToAdd);
 
-			return new ResponseEntity<Object>("FilmController: film saved.", HttpStatus.OK);
+			return new ResponseEntity<CustomRESTponse>(
+					new CustomRESTponse(201, "CREATED", "FilmController: film saved.", request), HttpStatus.CREATED);
 
 		} else {
 
@@ -108,7 +115,9 @@ public class FilmController {
 				Optional<Country> searchedCountry = countryRepository.findByCountryId(filmRequest.getCountryId());
 
 				if (!searchedCountry.isPresent())
-					return new ResponseEntity<Object>("FilmController: no such country found.", HttpStatus.NOT_FOUND);
+					return new ResponseEntity<CustomRESTponse>(
+							new CustomRESTponse(404, "NOT FOUND", "FilmController: no such country found.", request),
+							HttpStatus.NOT_FOUND);
 
 				Country country = searchedCountry.get();
 
@@ -124,7 +133,9 @@ public class FilmController {
 				Optional<Language> searchedLanguage = languageRepository.findByLanguageId(filmRequest.getLanguageId());
 
 				if (!searchedLanguage.isPresent())
-					return new ResponseEntity<Object>("FilmController: no such language found.", HttpStatus.NOT_FOUND);
+					return new ResponseEntity<CustomRESTponse>(
+							new CustomRESTponse(404, "NOT FOUND", "FilmController: no such language found.", request),
+							HttpStatus.NOT_FOUND);
 
 				Language language = searchedLanguage.get();
 
@@ -140,7 +151,9 @@ public class FilmController {
 				Set<Actor> searchedActors = actorRepository.jpqlFindByActorIdIn(filmRequest.getActorsId());
 
 				if (searchedActors.isEmpty())
-					return new ResponseEntity<Object>("FilmController: no such actor(s) found.", HttpStatus.NOT_FOUND);
+					return new ResponseEntity<CustomRESTponse>(
+							new CustomRESTponse(404, "NOT FOUND", "FilmController: no such actor(s) found.", request),
+							HttpStatus.NOT_FOUND);
 
 				Set<Actor> actors = searchedActors;
 
@@ -170,26 +183,29 @@ public class FilmController {
 
 			if (changes) {
 				filmRepository.save(filmToUpdate);
-				return new ResponseEntity<Object>("FilmController: film updated", HttpStatus.OK);
+				return new ResponseEntity<CustomRESTponse>(
+						new CustomRESTponse(200, "OK", "FilmController: film updated.", request), HttpStatus.OK);
 			}
 
-			return new ResponseEntity<Object>("FilmController: no update needed.", HttpStatus.OK);
-
+			return new ResponseEntity<CustomRESTponse>(
+					new CustomRESTponse(200, "OK", "FilmController: film already exists.", request), HttpStatus.OK);
 		}
 
 	}
 
 	@GetMapping("get-film/{filmId}")
-	public ResponseEntity<?> getFilm(@PathVariable @NotBlank @Size(max = 10) String filmId, HttpServletRequest request) {
+	public ResponseEntity<?> getFilm(@PathVariable @NotBlank @Size(max = 10) String filmId,
+			HttpServletRequest request) {
 
 		Optional<FilmResponse> searchedFilm = filmRepository.jpqlFindByFilmById(filmId);
 
 		if (!searchedFilm.isPresent())
-			return new ResponseEntity<CustomResponse>(
-					new CustomResponse(404, "NOT FOUND", "FilmController: no such film found with given ID", request),
+			return new ResponseEntity<CustomRESTponse>(
+					new CustomRESTponse(404, "NOT FOUND", "FilmController: no such film found with given ID", request),
 					HttpStatus.NOT_FOUND);
 
-		return new ResponseEntity<CustomResponse>(new CustomResponse(200, "OK", searchedFilm, request), HttpStatus.OK);
+		return new ResponseEntity<CustomRESTponse>(new CustomRESTponse(200, "OK", searchedFilm, request),
+				HttpStatus.OK);
 
 	}
 
@@ -198,87 +214,85 @@ public class FilmController {
 			@RequestParam(defaultValue = "10") int pagSize, HttpServletRequest request) {
 
 		String direction = "ASC", sortBy = "title";
-		
-		List<FilmResponse> filmResponsePaged = filmService.pagedFilmResponseOfAllFilms(pagNo, pagSize, direction, sortBy);
+
+		List<FilmResponse> filmResponsePaged = filmService.pagedFilmResponseOfAllFilms(pagNo, pagSize, direction,
+				sortBy);
 
 		if (filmResponsePaged.isEmpty())
-			return new ResponseEntity<CustomResponse>(
-					new CustomResponse(404, "NOT FOUND", "FilmController: no film(s) found.", request), HttpStatus.NOT_FOUND);
+			return new ResponseEntity<CustomRESTponse>(
+					new CustomRESTponse(404, "NOT FOUND", "FilmController: no film(s) found.", request),
+					HttpStatus.NOT_FOUND);
 
-		return new ResponseEntity<CustomResponse>(new CustomResponse(200, "OK", filmResponsePaged, request),
+		return new ResponseEntity<CustomRESTponse>(new CustomRESTponse(200, "OK", filmResponsePaged, request),
 				HttpStatus.OK);
 
 	}
 
 	@GetMapping("find-film-in-store/{filmId}") // RESPONSE: film_id, store_name
-	public ResponseEntity<?> findFilmInStore(@PathVariable @NotBlank @Size(max = 10) String filmId, HttpServletRequest request) {
+	public ResponseEntity<?> findFilmInStore(@PathVariable @NotBlank @Size(max = 10) String filmId,
+			HttpServletRequest request) {
 
 		Optional<SimpleFilmResponse> inventory = inventoryRepository.jpqlFindFilmInStoreByFilmId(filmId);
 
 		if (!inventory.isPresent())
-			return new ResponseEntity<CustomResponse>(
-					new CustomResponse(404, "NOT FOUND", "FilmController: film not found in any store", request),
+			return new ResponseEntity<CustomRESTponse>(
+					new CustomRESTponse(404, "NOT FOUND", "FilmController: film not found in any store", request),
 					HttpStatus.NOT_FOUND);
 
-		return new ResponseEntity<CustomResponse>(new CustomResponse(200, "OK", inventory, request), HttpStatus.OK);
+		return new ResponseEntity<CustomRESTponse>(new CustomRESTponse(200, "OK", inventory, request), HttpStatus.OK);
 	}
 
 	@GetMapping("find-films-by-actors") // @RequestParam: Collection of actor lastnames -- return List<FilmResponse>
 	public ResponseEntity<?> findFilmsByActors(@RequestParam Set<String> actorLastnames, HttpServletRequest request) {
 
-		//TODO: da cambiare in existsBy...
+		// TODO: da cambiare in existsBy...
 		Set<Actor> actorSet = actorRepository.jpqlFindByLastNameIn(actorLastnames);
-		
+
 		if (actorSet.isEmpty())
-			return new ResponseEntity<CustomResponse>(
-					new CustomResponse(404, "NOT FOUND", "FilmController: no actor founds with the given lastnames", request),
-					HttpStatus.NOT_FOUND);
-		
+			return new ResponseEntity<CustomRESTponse>(new CustomRESTponse(404, "NOT FOUND",
+					"FilmController: no actor founds with the given lastnames", request), HttpStatus.NOT_FOUND);
+
 		Set<String> actorIDs = actorRepository.jpqlFindActorsIdByLastName(actorLastnames);
-		
+
 		List<FilmResponse> filmResponse = filmRepository.jpqlFindFilmsByActorsId(actorIDs);
-		
+
 		if (filmResponse.isEmpty())
-			return new ResponseEntity<CustomResponse>(
-					new CustomResponse(404, "NOT FOUND", "FilmController: no film founds with the given actor lastnames", request),
+			return new ResponseEntity<CustomRESTponse>(
+					new CustomRESTponse(404, "NOT FOUND",
+							"FilmController: no film founds with the given actor lastnames", request),
 					HttpStatus.NOT_FOUND);
-		
-		return new ResponseEntity<CustomResponse>(
-				new CustomResponse(200, "OK", filmResponse, request),
+
+		return new ResponseEntity<CustomRESTponse>(new CustomRESTponse(200, "OK", filmResponse, request),
 				HttpStatus.OK);
 
 	}
-	
+
 	@GetMapping("find-films-by-country/{countryId}") // @return FilmResponse
-	public ResponseEntity<?> getFilmsByCountry(@PathVariable @NotBlank @Size(min = 2, max = 2) String countryId, HttpServletRequest request) {
-		
+	public ResponseEntity<?> getFilmsByCountry(@PathVariable @NotBlank @Size(min = 2, max = 2) String countryId,
+			HttpServletRequest request) {
+
 		List<FilmResponse> response = filmRepository.jpqlFindFilmsByCountryId(countryId);
-		
+
 		if (response.isEmpty())
-			return new ResponseEntity<CustomResponse>(
-					new CustomResponse(404, "NOT FOUND", "FilmController: no film founds with the given country ID", request),
-					HttpStatus.NOT_FOUND);
-		
-		return new ResponseEntity<CustomResponse>(
-				new CustomResponse(200, "OK", response, request),
-				HttpStatus.OK);
-		
+			return new ResponseEntity<CustomRESTponse>(new CustomRESTponse(404, "NOT FOUND",
+					"FilmController: no film founds with the given country ID", request), HttpStatus.NOT_FOUND);
+
+		return new ResponseEntity<CustomRESTponse>(new CustomRESTponse(200, "OK", response, request), HttpStatus.OK);
+
 	}
-	
+
 	@GetMapping("/find-films-by-language/{languageId}") // @return FilmResponse
-	public ResponseEntity<?> getFilmsByLanguage(@PathVariable @NotBlank @Size(min = 2, max = 2) String languageId, HttpServletRequest request) {
-		
+	public ResponseEntity<?> getFilmsByLanguage(@PathVariable @NotBlank @Size(min = 2, max = 2) String languageId,
+			HttpServletRequest request) {
+
 		List<FilmResponse> response = filmRepository.jpqlFindFilmsByLanguageId(languageId);
-		
+
 		if (response.isEmpty())
-			return new ResponseEntity<CustomResponse>(
-					new CustomResponse(404, "NOT FOUND", "FilmController: no film founds with the given language ID", request),
-					HttpStatus.NOT_FOUND);
-		
-		return new ResponseEntity<CustomResponse>(
-				new CustomResponse(200, "OK", response, request),
-				HttpStatus.OK);
-		
+			return new ResponseEntity<CustomRESTponse>(new CustomRESTponse(404, "NOT FOUND",
+					"FilmController: no film founds with the given language ID", request), HttpStatus.NOT_FOUND);
+
+		return new ResponseEntity<CustomRESTponse>(new CustomRESTponse(200, "OK", response, request), HttpStatus.OK);
+
 	}
 
 }

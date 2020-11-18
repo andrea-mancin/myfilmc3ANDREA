@@ -21,4 +21,6 @@ public interface InventoryRepository extends JpaRepository<Inventory, InventoryI
 			+ "WHERE f.filmId = :filmId")
 	Optional<SimpleFilmResponse> jpqlFindFilmInStoreByFilmId(String filmId);
 	
+	boolean existsByInventoryIdFilmFilmIdAndInventoryIdStoreStoreId(String filmId, String storeId);
+		
 }

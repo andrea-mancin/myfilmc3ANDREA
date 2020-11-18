@@ -20,7 +20,7 @@ public class Rental {
 	@Column(name = "RENTAL_ID")
 	private RentalId rentalId;
 	
-	@Column(name = "RENTAL_RETURN", nullable = false)
+	@Column(name = "RENTAL_RETURN", nullable = false, columnDefinition="DATE")
 	private Date rentalReturn;
 	
 }
